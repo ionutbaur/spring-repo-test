@@ -10,7 +10,7 @@ import java.util.List;
 
 @Tag(name = "Order Manager", description = "Order Manager API that manipulates operations related to orders") // Swagger annotation to group the API endpoints under the "Order Manager" tag
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("orders")
 public class OrderController {
 
     private final OrderService orderService;

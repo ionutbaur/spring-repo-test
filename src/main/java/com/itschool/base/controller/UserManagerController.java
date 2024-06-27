@@ -10,7 +10,7 @@ import java.util.List;
 
 @Tag(name = "User Manager", description = "User Manager API that manipulates all the operations related to users") // Swagger annotation to group the API endpoints under the "User Manager" tag
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 public class UserManagerController {
 
     private final UserService userService;
@@ -26,7 +26,7 @@ public class UserManagerController {
     }
 
     @Operation(summary = "Find all users", description = "Find all users in the database and return a list of users")
-    @GetMapping
+    @GetMapping("all")
     public List<UserDTO> findAllUsers() {
         return userService.findAllUsers();
     }

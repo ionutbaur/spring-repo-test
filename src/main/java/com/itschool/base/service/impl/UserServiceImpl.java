@@ -1,8 +1,10 @@
 package com.itschool.base.service.impl;
 
 import com.itschool.base.entity.Address;
+import com.itschool.base.entity.Order;
 import com.itschool.base.entity.User;
 import com.itschool.base.model.AddressDTO;
+import com.itschool.base.model.OrderDTO;
 import com.itschool.base.model.UserDTO;
 import com.itschool.base.repository.UserRepository;
 import com.itschool.base.service.UserService;
@@ -10,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -73,9 +77,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) {
-        AddressDTO addressDTO = userDTO.address();
-        Address address = new Address(addressDTO.city(), addressDTO.street(), addressDTO.number(), addressDTO.zipCode());
-        User user = new User(id, userDTO.name(), userDTO.email(), userDTO.age(), address);
+        User user = convertToUser(userDTO);
+        user.setId(id);
 
         User updatedUser = userRepository.save(user);
 
@@ -101,8 +104,18 @@ public class UserServiceImpl implements UserService {
         // convert the addressDTO to an Address entity
         Address address = new Address(addressDTO.city(), addressDTO.street(), addressDTO.number(), addressDTO.zipCode());
 
+        // get the orderDTOs from the userDTO
+        List<OrderDTO> orderDTOS = userDTO.orders();
+
+        // convert the orderDTOs to Order entities
+        List<Order> orders = Optional.ofNullable(orderDTOS)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(orderDTO -> new Order(orderDTO.description()))
+                .toList();
+
         // create a new User entity with userDTO info and the address entity
-        return new User(userDTO.name(), userDTO.email(), userDTO.age(), address);
+        return new User(userDTO.name(), userDTO.email(), userDTO.age(), address, orders);
     }
 
     private UserDTO convertToUserDTO(User user) {
@@ -112,7 +125,12 @@ public class UserServiceImpl implements UserService {
         // convert the Address entity to an AddressDTO
         AddressDTO addressDTO = new AddressDTO(address.getCity(), address.getStreet(), address.getNumber(), address.getZipCode());
 
+        List<OrderDTO> orderDTOS = user.getOrders()
+                .stream()
+                .map(order -> new OrderDTO(order.getId(), order.getDescription()))
+                .toList();
+
         // return a new UserDTO based on the info from User entity and the AddressDTO
-        return new UserDTO(user.getName(), user.getEmail(), user.getAge(), addressDTO);
+        return new UserDTO(user.getName(), user.getEmail(), user.getAge(), addressDTO, orderDTOS);
     }
 }

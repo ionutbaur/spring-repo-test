@@ -26,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findAllOrders(Long userId) {
-        return orderRepository.findByUserId(userId)
+        return orderRepository.findOrdersByUser_Id(userId)
                 .stream()
                 .map(order -> new OrderDTO(order.getId(), order.getDescription()))
                 .toList();
@@ -40,5 +40,13 @@ public class OrderServiceImpl implements OrderService {
         Order createdOrder = orderRepository.save(order);
 
         return new OrderDTO(createdOrder.getId(), createdOrder.getDescription());
+    }
+
+    @Override
+    public List<OrderDTO> findOrdersByDescription(String description) {
+        return orderRepository.findOrdersByDescription(description)
+                .stream()
+                .map(order -> new OrderDTO(order.getId(), order.getDescription()))
+                .toList();
     }
 }

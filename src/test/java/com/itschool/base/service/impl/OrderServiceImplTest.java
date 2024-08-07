@@ -43,14 +43,14 @@ class OrderServiceImplTest {
     void findAllOrders() {
         // we define the behavior of the mock object
         // when the method findByUserId is called with the USER_ID as an argument, it should return our list of orders (createOrderList()) instead of querying the database
-        Mockito.when(orderRepository.findByUserId(USER_ID))
+        Mockito.when(orderRepository.findOrdersByUser_Id(USER_ID))
                 .thenReturn(createOrderList());
 
         // we call the method we want to test
         List<OrderDTO> orderDTOList = orderServiceImpl.findAllOrders(USER_ID);
 
         // we verify that the method findByUserId was called with the USER_ID as an argument
-        Mockito.verify(orderRepository).findByUserId(USER_ID);
+        Mockito.verify(orderRepository).findOrdersByUser_Id(USER_ID);
 
         // we verify that the method findAllOrders returns a list of OrderDTO objects with the same size of the list we created (createOrderList())
         Assertions.assertEquals(2, orderDTOList.size());

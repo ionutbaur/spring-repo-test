@@ -11,4 +11,6 @@ public interface OrderService {
     List<OrderDTO> findAllOrders(Long userId);
 
     OrderDTO placeOrder(Long userId, OrderDTO orderDTO);
+
+    List<OrderDTO> findOrdersByDescription(String description);
 }

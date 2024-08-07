@@ -30,4 +30,9 @@ public class OrderController {
     public List<OrderDTO> getAllOrders(@PathVariable Long userId) {
         return orderService.findAllOrders(userId);
     }
+
+    @GetMapping("description/{description}")
+    public List<OrderDTO> getOrdersByDescription(@PathVariable String description) {
+        return orderService.findOrdersByDescription(description);
+    }
 }
